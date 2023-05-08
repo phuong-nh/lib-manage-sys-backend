@@ -29,7 +29,6 @@ public class UserBookHistory {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @MapsId("readDate")
     @Column(name = "read_date", nullable = false)
     private LocalDate readDate;
 

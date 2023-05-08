@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -21,7 +20,4 @@ public class UserBookHistoryID implements Serializable {
 
     @Column(name = "book_id")
     private UUID bookId;
-
-    @Column(name = "read_date")
-    private LocalDate readDate;
 }

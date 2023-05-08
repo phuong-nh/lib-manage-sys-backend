@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.Set;
 
 import com.phuongnh.personal.library_management_system.Author.Author;
 import com.phuongnh.personal.library_management_system.BookCopy.BookCopy;
@@ -44,6 +45,14 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<Author> authors;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "book_category",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories;
 
     @Column(name = "published_date", nullable = false)
     private LocalDate publishedDate;
