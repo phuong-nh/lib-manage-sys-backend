@@ -1,5 +1,9 @@
 package com.phuongnh.personal.library_management_system.Book;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +12,6 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
-import java.util.Set;
 
 import com.phuongnh.personal.library_management_system.Author.Author;
 import com.phuongnh.personal.library_management_system.BookCopy.BookCopy;
@@ -18,6 +21,11 @@ import com.phuongnh.personal.library_management_system.Category.Category;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Table(name = "book")
 public class Book {
 
@@ -46,19 +54,31 @@ public class Book {
     )
     private List<Author> authors;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    @Transient
+    private List<UUID> authorIds;
+
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_category",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
-    private Set<Category> categories;
+    private List<Category> categories;
+
+    @JsonIgnore
+    @Transient
+    private List<UUID> categoryIds;
 
     @Column(name = "published_date", nullable = false)
     private LocalDate publishedDate;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookCopy> copies;
+
+    @JsonIgnore
+    @Transient
+    private int numberOfCopies = 0;
 
     @Column(name = "imgsrc")
     private String imgsrc;

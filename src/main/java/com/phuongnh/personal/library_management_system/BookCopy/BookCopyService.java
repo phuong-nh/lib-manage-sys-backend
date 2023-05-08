@@ -35,6 +35,6 @@ public class BookCopyService {
     }
 
     public void deleteBookCopy(UUID id) {
-        bookCopyRepository.delete(getBookCopyById(id));
+        bookCopyRepository.deleteById(id);
     }
 }

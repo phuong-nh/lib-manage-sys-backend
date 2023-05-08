@@ -1,5 +1,7 @@
 package com.phuongnh.personal.library_management_system.BookCopy;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +17,10 @@ import com.phuongnh.personal.library_management_system.User.User;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 @Table(name = "book_copy")
 public class BookCopy {
 
@@ -22,6 +28,7 @@ public class BookCopy {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", unique = true, nullable = false)
     private UUID id;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
@@ -42,9 +49,3 @@ public class BookCopy {
     private LocalDate returnDate;
 }
 
-enum BookCopyStatus {
-    AVAILABLE,
-    BORROWED,
-    RESERVED,
-    LOST
-}
