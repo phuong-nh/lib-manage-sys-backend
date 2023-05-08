@@ -3,7 +3,7 @@ info:
   title: Library Management System API
   version: 0.0.1
 servers:
-  - url: 'http://localhost:3000/api/v0'
+  - url: 'http://localhost:8080'
 
 paths:
 

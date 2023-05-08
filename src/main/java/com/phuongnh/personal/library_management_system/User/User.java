@@ -1,6 +1,5 @@
 package com.phuongnh.personal.library_management_system.User;
 
-import com.phuongnh.personal.library_management_system.Book.Book;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +24,7 @@ public class User {
     @Column(name = "surname")
     private String surname;
 
-    @Column(name = "isGivenSurname", nullable = false)
+    @Column(name = "is_given_surname", nullable = false)
     private boolean isGivenSurname;
 
     @Column(name = "email", nullable = false, unique = true)

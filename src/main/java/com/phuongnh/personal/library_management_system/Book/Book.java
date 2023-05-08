@@ -26,8 +26,8 @@ public class Book {
     @Column(name = "id", unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "ISBN", unique = true, nullable = false)
-    private String ISBN;
+    @Column(name = "isbn", unique = true, nullable = false)
+    private String isbn;
 
     @Column(name = "title", nullable = false)
     private String title;
