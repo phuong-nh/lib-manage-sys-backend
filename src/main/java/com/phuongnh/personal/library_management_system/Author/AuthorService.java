@@ -1,5 +1,8 @@
 package com.phuongnh.personal.library_management_system.Author;
 
+import com.phuongnh.personal.library_management_system.Content.Content;
+import com.phuongnh.personal.library_management_system.Content.ContentRepository;
+import com.phuongnh.personal.library_management_system.Content.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +15,8 @@ public class AuthorService {
 
     @Autowired
     private AuthorRepository authorRepository;
+    @Autowired
+    private ContentRepository contentRepository;
 
     private AuthorDTO toAuthorDTO(Author author) {
         return new AuthorDTO(
@@ -29,7 +34,7 @@ public class AuthorService {
         author.setId(authorDTO.getId());
         author.setGivenName(authorDTO.getGivenName());
         author.setSurname(authorDTO.getSurname());
-        author.setSurnameFirst(authorDTO.isSurnameFirst());
+        author.setSurnameFirst(authorDTO.getIsSurnameFirst());
         author.setImgsrc(authorDTO.getImgsrc());
         author.setAuthorBio(authorDTO.getAuthorBio());
         return author;
@@ -48,16 +53,49 @@ public class AuthorService {
 
     public AuthorDTO createAuthor(AuthorDTO authorDTO) {
         Author author = toAuthor(authorDTO);
+
+        if (authorDTO.getAuthorBio() != null) {
+            Content authorBio = authorDTO.getAuthorBio();
+            authorBio.setContentType(ContentType.AUTHOR_BIO);
+            author.setAuthorBio(contentRepository.save(authorBio));
+        } else {
+            Content defaultAuthorBio = new Content();
+            defaultAuthorBio.setContentType(ContentType.AUTHOR_BIO);
+            defaultAuthorBio.setTitle("Author Bio");
+            defaultAuthorBio.setContent("This is the default author bio");
+            author.setAuthorBio(contentRepository.save(defaultAuthorBio));
+        }
+
         Author savedAuthor = authorRepository.save(author);
         return toAuthorDTO(savedAuthor);
     }
 
     public AuthorDTO updateAuthor(UUID id, AuthorDTO authorDTO) {
         Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
-        existingAuthor.setGivenName(authorDTO.getGivenName());
-        existingAuthor.setSurname(authorDTO.getSurname());
-        existingAuthor.setSurnameFirst(authorDTO.isSurnameFirst());
-        existingAuthor.setImgsrc(authorDTO.getImgsrc());
+
+        if (authorDTO.getAuthorBio() != null) {
+            Content authorBio = existingAuthor.getAuthorBio();
+            authorBio.setTitle(authorDTO.getAuthorBio().getTitle());
+            authorBio.setContent(authorDTO.getAuthorBio().getContent());
+            contentRepository.save(authorBio);
+        }
+
+        if (authorDTO.getGivenName() != null) {
+            existingAuthor.setGivenName(authorDTO.getGivenName());
+        }
+
+        if (authorDTO.getSurname() != null) {
+            existingAuthor.setSurname(authorDTO.getSurname());
+        }
+
+        if (authorDTO.getIsSurnameFirst() != null) {
+            existingAuthor.setSurnameFirst(authorDTO.getIsSurnameFirst());
+        }
+
+        if (authorDTO.getImgsrc() != null) {
+            existingAuthor.setImgsrc(authorDTO.getImgsrc());
+        }
+
         Author updatedAuthor = authorRepository.save(existingAuthor);
         return toAuthorDTO(updatedAuthor);
     }

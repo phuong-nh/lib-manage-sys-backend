@@ -1,5 +1,7 @@
 package com.phuongnh.personal.library_management_system.Category;
 
+import com.phuongnh.personal.library_management_system.Book.Book;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,5 +35,34 @@ public class CategoryService {
 
     public void deleteCategory(UUID id) {
         categoryRepository.delete(getCategoryById(id));
+    }
+
+    public CategoryDTO convertToDTO(Category category) {
+        return new CategoryDTO(category.getId(), category.getName());
+    }
+
+    public List<Book> getBooksByCategoryName(String categoryName) {
+        Category category = categoryRepository.findByName(categoryName)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        return category.getBooks();
+    }
+
+    public void deleteCategoryByName(String name) {
+        Category category = categoryRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        categoryRepository.delete(category);
+    }
+
+    public Category updateCategoryByName(String name, Category category) {
+        Category existingCategory = categoryRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        existingCategory.setName(category.getName());
+        existingCategory.setBooks(category.getBooks());
+        return categoryRepository.save(existingCategory);
+    }
+
+    public Category getCategoryByName(String name) {
+        return categoryRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
     }
 }

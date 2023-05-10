@@ -1,5 +1,6 @@
 package com.phuongnh.personal.library_management_system.Book;
 
+import com.phuongnh.personal.library_management_system.Content.Content;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +17,11 @@ public class BookDTO {
     private String isbn;
     private String title;
     private String description;
+    private Content bookBio;
     private String publisher;
     private List<UUID> authorIds;
     private List<UUID> categoryIds;
     private LocalDate publishedDate;
-    private int numberOfCopies;
+    private Integer numberOfCopies;
     private String imgsrc;
 }

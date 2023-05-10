@@ -1,6 +1,10 @@
 package com.phuongnh.personal.library_management_system.Content;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.phuongnh.personal.library_management_system.Author.Author;
+import com.phuongnh.personal.library_management_system.Book.Book;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +19,10 @@ import com.phuongnh.personal.library_management_system.User.User;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
 @Table(name = "content")
 public class Content {
 
@@ -43,18 +51,17 @@ public class Content {
     private boolean showOnHomePage;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "author_id")
     private User author;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "author_bio_id", referencedColumnName = "id")
     private Author authorBio;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_bio_id", referencedColumnName = "id")
+    private Book bookBio;
 }
 
-enum ContentType {
-    NEWS,
-    BLOG,
-    AUTHOR_BIO,
-    BOOK_BIO,
-    OTHER
-}

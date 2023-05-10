@@ -14,7 +14,7 @@ public class AuthorDTO {
     private UUID id;
     private String givenName;
     private String surname;
-    private boolean isSurnameFirst;
+    private Boolean isSurnameFirst;
     private String imgsrc;
     private Content authorBio;
 }

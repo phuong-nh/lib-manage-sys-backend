@@ -1,9 +1,9 @@
 package com.phuongnh.personal.library_management_system.Book;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.phuongnh.personal.library_management_system.Content.Content;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -42,6 +42,9 @@ public class Book {
 
     @Column(name = "description", nullable = false)
     private String description;
+
+    @OneToOne(mappedBy = "bookBio", fetch = FetchType.LAZY)
+    private Content bookBio;
 
     @Column(name = "publisher", nullable = false)
     private String publisher;
