@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
@@ -12,28 +13,57 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    public List<Author> getAllAuthors() {
-        return authorRepository.findAll();
+    private AuthorDTO toAuthorDTO(Author author) {
+        return new AuthorDTO(
+                author.getId(),
+                author.getGivenName(),
+                author.getSurname(),
+                author.isSurnameFirst(),
+                author.getImgsrc(),
+                author.getAuthorBio()
+        );
     }
 
-    public Author getAuthorById(UUID id) {
-        return authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+    private Author toAuthor(AuthorDTO authorDTO) {
+        Author author = new Author();
+        author.setId(authorDTO.getId());
+        author.setGivenName(authorDTO.getGivenName());
+        author.setSurname(authorDTO.getSurname());
+        author.setSurnameFirst(authorDTO.isSurnameFirst());
+        author.setImgsrc(authorDTO.getImgsrc());
+        author.setAuthorBio(authorDTO.getAuthorBio());
+        return author;
     }
 
-    public Author createAuthor(Author author) {
-        return authorRepository.save(author);
+    public List<AuthorDTO> getAllAuthors() {
+        return authorRepository.findAll().stream()
+                .map(this::toAuthorDTO)
+                .collect(Collectors.toList());
     }
 
-    public Author updateAuthor(UUID id, Author author) {
-        Author existingAuthor = getAuthorById(id);
-        existingAuthor.setGivenName(author.getGivenName());
-        existingAuthor.setSurname(author.getSurname());
-        existingAuthor.setFullName(author.getFullName());
-        existingAuthor.setImgsrc(author.getImgsrc());
-        return authorRepository.save(existingAuthor);
+    public AuthorDTO getAuthorById(UUID id) {
+        Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+        return toAuthorDTO(author);
+    }
+
+    public AuthorDTO createAuthor(AuthorDTO authorDTO) {
+        Author author = toAuthor(authorDTO);
+        Author savedAuthor = authorRepository.save(author);
+        return toAuthorDTO(savedAuthor);
+    }
+
+    public AuthorDTO updateAuthor(UUID id, AuthorDTO authorDTO) {
+        Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+        existingAuthor.setGivenName(authorDTO.getGivenName());
+        existingAuthor.setSurname(authorDTO.getSurname());
+        existingAuthor.setSurnameFirst(authorDTO.isSurnameFirst());
+        existingAuthor.setImgsrc(authorDTO.getImgsrc());
+        Author updatedAuthor = authorRepository.save(existingAuthor);
+        return toAuthorDTO(updatedAuthor);
     }
 
     public void deleteAuthor(UUID id) {
-        authorRepository.delete(getAuthorById(id));
+        Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+        authorRepository.delete(author);
     }
 }

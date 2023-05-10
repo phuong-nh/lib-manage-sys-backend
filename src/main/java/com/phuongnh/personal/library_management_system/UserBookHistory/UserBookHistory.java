@@ -1,5 +1,7 @@
-package com.phuongnh.personal.library_management_system.User;
+package com.phuongnh.personal.library_management_system.UserBookHistory;
 
+import com.phuongnh.personal.library_management_system.User.User;
+import com.phuongnh.personal.library_management_system.User.UserBookHistoryID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

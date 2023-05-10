@@ -1,5 +1,6 @@
 package com.phuongnh.personal.library_management_system.Author;
 
+import com.phuongnh.personal.library_management_system.Author.AuthorDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,23 +17,27 @@ public class AuthorController {
     private AuthorService authorService;
 
     @GetMapping
-    public ResponseEntity<List<Author>> getAllAuthors() {
-        return ResponseEntity.ok(authorService.getAllAuthors());
+    public ResponseEntity<List<AuthorDTO>> getAllAuthors() {
+        List<AuthorDTO> authors = authorService.getAllAuthors();
+        return ResponseEntity.ok(authors);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Author> getAuthorById(@PathVariable UUID id) {
-        return ResponseEntity.ok(authorService.getAuthorById(id));
+    public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable UUID id) {
+        AuthorDTO authorDTO = authorService.getAuthorById(id);
+        return ResponseEntity.ok(authorDTO);
     }
 
     @PostMapping
-    public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
-        return new ResponseEntity<>(authorService.createAuthor(author), HttpStatus.CREATED);
+    public ResponseEntity<AuthorDTO> createAuthor(@RequestBody AuthorDTO authorDTO) {
+        AuthorDTO createdAuthor = authorService.createAuthor(authorDTO);
+        return new ResponseEntity<>(createdAuthor, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Author> updateAuthor(@PathVariable UUID id, @RequestBody Author author) {
-        return ResponseEntity.ok(authorService.updateAuthor(id, author));
+    public ResponseEntity<AuthorDTO> updateAuthor(@PathVariable UUID id, @RequestBody AuthorDTO authorDTO) {
+        AuthorDTO updatedAuthor = authorService.updateAuthor(id, authorDTO);
+        return ResponseEntity.ok(updatedAuthor);
     }
 
     @DeleteMapping("/{id}")

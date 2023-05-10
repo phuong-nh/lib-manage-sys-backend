@@ -16,29 +16,39 @@ public class BookCopyController {
     private BookCopyService bookCopyService;
 
     @GetMapping
-    public ResponseEntity<List<BookCopy>> getAllBookCopies() {
+    public ResponseEntity<List<BookCopyDTO>> getAllBookCopies() {
         return ResponseEntity.ok(bookCopyService.getAllBookCopies());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookCopy> getBookCopyById(@PathVariable UUID id) {
+    public ResponseEntity<BookCopyDTO> getBookCopyById(@PathVariable UUID id) {
         return ResponseEntity.ok(bookCopyService.getBookCopyById(id));
     }
 
     @PostMapping
-    public ResponseEntity<BookCopy> createBookCopy(@RequestBody BookCopy bookCopy) {
-        return new ResponseEntity<>(bookCopyService.createBookCopy(bookCopy), HttpStatus.CREATED);
+    public ResponseEntity<BookCopyDTO> createBookCopy(@RequestBody BookCopyDTO bookCopyDTO) {
+        return new ResponseEntity<>(bookCopyService.createBookCopy(bookCopyDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookCopy> updateBookCopy(@PathVariable UUID id, @RequestBody BookCopy bookCopy) {
-        return ResponseEntity.ok(bookCopyService.updateBookCopy(id, bookCopy));
+    public ResponseEntity<BookCopyDTO> updateBookCopy(@PathVariable UUID id, @RequestBody BookCopyDTO bookCopyDTO) {
+        return ResponseEntity.ok(bookCopyService.updateBookCopy(id, bookCopyDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBookCopy(@PathVariable UUID id) {
         bookCopyService.deleteBookCopy(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/borrow/{borrowerId}")
+    public ResponseEntity<BookCopyDTO> borrowBook(@PathVariable UUID id, @PathVariable UUID borrowerId) {
+        return ResponseEntity.ok(bookCopyService.borrowBook(id, borrowerId));
+    }
+
+    @PostMapping("/{id}/return")
+    public ResponseEntity<BookCopyDTO> returnBook(@PathVariable UUID id) {
+        return ResponseEntity.ok(bookCopyService.returnBook(id));
     }
 }
 

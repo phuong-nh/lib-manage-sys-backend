@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class BookService {
@@ -24,19 +25,33 @@ public class BookService {
     private CategoryRepository categoryRepository;
     @Autowired
     private BookCopyRepository bookCopyRepository;
+    @Autowired
+    private BookMapper bookMapper;
 
-    public List<Book> getAllBooks() {
-        return bookRepository.findAll();
+    public List<BookDTO> getAllBooks() {
+        return bookRepository.findAll().stream()
+                .map(bookMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Book getBookById(UUID id) {
-        return bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
+    public BookDTO getBookById(UUID id) {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
+        return bookMapper.toDTO(book);
     }
 
-    public Book createBook(Book book) {
-        if (book.getAuthorIds() != null && !book.getAuthorIds().isEmpty()) {
-            List<Author> authors = authorRepository.findAllById(book.getAuthorIds());
-            if (authors.size() != book.getAuthorIds().size()) {
+    public List<BookCopyStatus> getBookCopyStatus(UUID bookId) {
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("Book not found"));
+        return book.getCopies().stream()
+                .map(BookCopy::getStatus)
+                .collect(Collectors.toList());
+    }
+
+    public BookDTO createBook(BookDTO bookDTO) {
+        Book book = bookMapper.toEntity(bookDTO);
+
+        if (bookDTO.getAuthorIds() != null && !bookDTO.getAuthorIds().isEmpty()) {
+            List<Author> authors = authorRepository.findAllById(bookDTO.getAuthorIds());
+            if (authors.size() != bookDTO.getAuthorIds().size()) {
                 throw new RuntimeException("Some author IDs are invalid or not found");
             }
             book.setAuthors(authors);
@@ -44,9 +59,9 @@ public class BookService {
             throw new RuntimeException("At least one author ID must be provided");
         }
 
-        if (book.getCategoryIds() != null && !book.getCategoryIds().isEmpty()) {
-            List<Category> categories = categoryRepository.findAllById(book.getCategoryIds());
-            if (categories.size() != book.getCategoryIds().size()) {
+        if (bookDTO.getCategoryIds() != null && !bookDTO.getCategoryIds().isEmpty()) {
+            List<Category> categories = categoryRepository.findAllById(bookDTO.getCategoryIds());
+            if (categories.size() != bookDTO.getCategoryIds().size()) {
                 throw new RuntimeException("Some category IDs are invalid or not found");
             }
             book.setCategories(categories);
@@ -56,8 +71,8 @@ public class BookService {
 
         book = bookRepository.save(book);
 
-        if (book.getNumberOfCopies() > 0) {
-            for (int i = 0; i < book.getNumberOfCopies(); i++) {
+        if (bookDTO.getNumberOfCopies() > 0) {
+            for (int i = 0; i < bookDTO.getNumberOfCopies(); i++) {
                 BookCopy bookCopy = new BookCopy();
                 bookCopy.setBook(book);
                 bookCopy.setStatus(BookCopyStatus.AVAILABLE);
@@ -65,24 +80,40 @@ public class BookService {
             }
         }
 
-        return bookRepository.save(book);
+        return bookMapper.toDTO(book);
     }
 
-    public Book updateBook(UUID id, Book book) {
-        Book existingBook = getBookById(id);
-        existingBook.setIsbn(book.getIsbn());
-        existingBook.setTitle(book.getTitle());
-        existingBook.setDescription(book.getDescription());
-        existingBook.setPublisher(book.getPublisher());
-        existingBook.setAuthors(book.getAuthors());
-        existingBook.setCategories(book.getCategories());
-        existingBook.setPublishedDate(book.getPublishedDate());
-        existingBook.setCopies(book.getCopies());
-        existingBook.setImgsrc(book.getImgsrc());
-        return bookRepository.save(existingBook);
+    public BookDTO updateBook(UUID id, BookDTO bookDTO) {
+        Book existingBook = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book updatedBook = bookMapper.updateEntityFromDTO(bookDTO, existingBook);
+
+        int existingNumberOfCopies = existingBook.getCopies().size();
+        int newNumberOfCopies = bookDTO.getNumberOfCopies();
+        if (newNumberOfCopies != existingNumberOfCopies) {
+            if (newNumberOfCopies > existingNumberOfCopies) {
+                // Add new copies
+                for (int i = 0; i < newNumberOfCopies - existingNumberOfCopies; i++) {
+                    BookCopy bookCopy = new BookCopy();
+                    bookCopy.setBook(existingBook);
+                    bookCopy.setStatus(BookCopyStatus.AVAILABLE);
+                    bookCopyRepository.save(bookCopy);
+                }
+            } else {
+                // Remove extra copies (only remove AVAILABLE copies)
+                List<BookCopy> availableCopies = existingBook.getCopies().stream()
+                        .filter(copy -> copy.getStatus() == BookCopyStatus.AVAILABLE)
+                        .collect(Collectors.toList());
+
+                int copiesToRemove = existingNumberOfCopies - newNumberOfCopies;
+                for (int i = 0; i < copiesToRemove && i < availableCopies.size(); i++) {
+                    bookCopyRepository.delete(availableCopies.get(i));
+                }
+            }
+        }
+        return bookMapper.toDTO(bookRepository.save(updatedBook));
     }
 
     public void deleteBook(UUID id) {
-        bookRepository.delete(getBookById(id));
+        bookRepository.deleteAllById(List.of(id));
     }
 }

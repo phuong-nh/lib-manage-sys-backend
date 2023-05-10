@@ -26,7 +26,7 @@ public class ReservationService {
 
     public Reservation updateReservation(UUID id, Reservation reservation) {
         Reservation existingReservation = getReservationById(id);
-        existingReservation.setBookCopy(reservation.getBookCopy());
+        existingReservation.setBook(reservation.getBook());
         existingReservation.setUser(reservation.getUser());
         existingReservation.setReservationDate(reservation.getReservationDate());
         existingReservation.setExpirationDate(reservation.getExpirationDate());

@@ -1,5 +1,6 @@
 package com.phuongnh.personal.library_management_system.Content;
 
+import com.phuongnh.personal.library_management_system.Author.Author;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,15 +36,19 @@ public class Content {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "date", nullable = false)
-    private LocalDateTime date;
+    @Column(name = "date")
+    private LocalDateTime date = LocalDateTime.now();
 
-    @Column(name = "show_on_home_page", nullable = false)
+    @Column(name = "show_on_home_page")
     private boolean showOnHomePage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private Author authorBio;
 }
 
 enum ContentType {

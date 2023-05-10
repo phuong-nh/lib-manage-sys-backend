@@ -54,10 +54,6 @@ public class Book {
     )
     private List<Author> authors;
 
-    @JsonIgnore
-    @Transient
-    private List<UUID> authorIds;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_category",
@@ -66,19 +62,11 @@ public class Book {
     )
     private List<Category> categories;
 
-    @JsonIgnore
-    @Transient
-    private List<UUID> categoryIds;
-
     @Column(name = "published_date", nullable = false)
     private LocalDate publishedDate;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<BookCopy> copies;
-
-    @JsonIgnore
-    @Transient
-    private int numberOfCopies = 0;
 
     @Column(name = "imgsrc")
     private String imgsrc;
