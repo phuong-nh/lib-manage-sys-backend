@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/contents")
@@ -14,11 +15,31 @@ public class ContentController {
 
     @Autowired
     private ContentService contentService;
+    @Autowired
+    private ContentMapper contentMapper;
 
     @GetMapping
     public ResponseEntity<List<Content>> getAllContents() {
         List<Content> contents = contentService.getAllContents();
         return new ResponseEntity<>(contents, HttpStatus.OK);
+    }
+
+    @GetMapping("/type/{contentType}")
+    public ResponseEntity<List<ContentDTO>> getContentsByType(@PathVariable ContentType contentType) {
+        List<Content> contents = contentService.getAllContentsByType(contentType);
+        List<ContentDTO> contentDTOs = contents.stream()
+                .map(contentMapper::toDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(contentDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/homepage")
+    public ResponseEntity<List<ContentDTO>> getHomePageContents() {
+        List<Content> contents = contentService.getHomePageContents();
+        List<ContentDTO> contentDTOs = contents.stream()
+                .map(contentMapper::toDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(contentDTOs, HttpStatus.OK);
     }
 
     @GetMapping("/{contentId}")

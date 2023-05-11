@@ -41,4 +41,12 @@ public class ContentService {
         Content content = getContentById(contentId);
         contentRepository.delete(content);
     }
+
+    public List<Content> getAllContentsByType(ContentType contentType) {
+        return contentRepository.findAllByContentType(contentType);
+    }
+
+    public List<Content> getHomePageContents() {
+        return contentRepository.findAllByShowOnHomePage(true);
+    }
 }
