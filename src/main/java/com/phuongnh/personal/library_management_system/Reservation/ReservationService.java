@@ -12,28 +12,21 @@ public class ReservationService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<Reservation> getAllReservations() {
-        return reservationRepository.findAll();
+    public List<ReservationDTO> getAllReservations() {
+        return reservationRepository.findAll().stream().map(ReservationMapper::toDTO).toList();
     }
 
-    public Reservation getReservationById(UUID id) {
-        return reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("Reservation not found"));
+    public ReservationDTO getReservationById(UUID id) {
+        return ReservationMapper.toDTO(reservationRepository.findById(id).orElseThrow(() -> new RuntimeException("Reservation not found")));
     }
 
-    public Reservation createReservation(Reservation reservation) {
-        return reservationRepository.save(reservation);
+    public ReservationDTO createReservation(ReservationDTO reservationDTO) {
+        return ReservationMapper.toDTO(reservationRepository.save(ReservationMapper.toEntity(reservationDTO)));
     }
 
-    public Reservation updateReservation(UUID id, Reservation reservation) {
-        Reservation existingReservation = getReservationById(id);
-        existingReservation.setBook(reservation.getBook());
-        existingReservation.setUser(reservation.getUser());
-        existingReservation.setReservationDate(reservation.getReservationDate());
-        existingReservation.setExpirationDate(reservation.getExpirationDate());
-        return reservationRepository.save(existingReservation);
-    }
+
 
     public void deleteReservation(UUID id) {
-        reservationRepository.delete(getReservationById(id));
+        reservationRepository.deleteById(id);
     }
 }

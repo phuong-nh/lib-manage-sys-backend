@@ -1,7 +1,7 @@
 package com.phuongnh.personal.library_management_system.Reservation;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.phuongnh.personal.library_management_system.Book.Book;
+import com.phuongnh.personal.library_management_system.BookCopy.BookCopy;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,22 +34,24 @@ public class Reservation {
     @JoinColumn(name = "book_id", referencedColumnName = "id", nullable = false)
     private Book book;
 
-    @JsonIgnore
-    @Transient
-    private UUID bookId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_copy_id", referencedColumnName = "id")
+    private BookCopy bookCopy;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
-    @JsonIgnore
-    @Transient
-    private UUID userId;
-
     @Column(name = "reservation_date", nullable = false)
     private LocalDate reservationDate;
 
+    @Column(name = "fulfillment_date")
+    private LocalDate fulfillmentDate;
+
     @Column(name = "expiration_date")
     private LocalDate expirationDate;
+
+    @Column(name = "is_fulfilled", nullable = false)
+    private Boolean isFulfilled;
 }
 
