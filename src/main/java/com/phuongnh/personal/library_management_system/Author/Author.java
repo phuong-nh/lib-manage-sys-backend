@@ -33,11 +33,11 @@ public class Author {
     @Column(name = "given_name", nullable = false)
     private String givenName;
 
-    @Column(name = "surname", nullable = false)
-    private String surname;
+    @Column(name = "sur_name", nullable = false)
+    private String surName;
 
-    @Column(name = "is_surname_first", nullable = false)
-    private boolean isSurnameFirst;
+    @Column(name = "is_given_surname", nullable = false)
+    private Boolean isGivenSurname;
 
     @Column(name = "imgsrc")
     private String imgsrc;

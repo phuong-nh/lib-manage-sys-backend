@@ -30,9 +30,9 @@ public class ContentService {
         existingContent.setContentType(content.getContentType());
         existingContent.setTitle(content.getTitle());
         existingContent.setContent(content.getContent());
-        existingContent.setImageUrl(content.getImageUrl());
+        existingContent.setImgsrc(content.getImgsrc());
         existingContent.setDate(content.getDate());
-        existingContent.setShowOnHomePage(content.isShowOnHomePage());
+        existingContent.setShowOnHomePage(content.getShowOnHomePage());
         existingContent.setAuthor(content.getAuthor());
         return contentRepository.save(existingContent);
     }

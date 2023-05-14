@@ -14,6 +14,7 @@ public class ContentDTO {
     private ContentType contentType;
     private String title;
     private String content;
-    private String imageUrl;
+    private String imgsrc;
+    private Boolean showOnHomePage;
     private LocalDateTime date;
 }

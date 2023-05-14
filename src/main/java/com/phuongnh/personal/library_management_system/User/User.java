@@ -18,14 +18,14 @@ public class User {
     @Column(name = "id", unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "givenname")
+    @Column(name = "given_name")
     private String givenName;
 
-    @Column(name = "surname")
-    private String surname;
+    @Column(name = "sur_name")
+    private String surName;
 
     @Column(name = "is_given_surname", nullable = false)
-    private boolean isGivenSurname;
+    private Boolean isGivenSurname;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -38,13 +38,6 @@ public class User {
     private String imgsrc;
 
     @Column(name = "is_banned", nullable = false)
-    private boolean isBanned;
-}
-
-enum UserRole {
-    USER,
-    STAFF,
-    ADMIN,
-    SUPERUSER
+    private Boolean isBanned;
 }
 

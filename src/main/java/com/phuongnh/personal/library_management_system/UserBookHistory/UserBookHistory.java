@@ -1,7 +1,7 @@
 package com.phuongnh.personal.library_management_system.UserBookHistory;
 
+import com.phuongnh.personal.library_management_system.BookCopy.BookCopy;
 import com.phuongnh.personal.library_management_system.User.User;
-import com.phuongnh.personal.library_management_system.User.UserBookHistoryID;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +30,11 @@ public class UserBookHistory {
     @MapsId("bookId")
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("bookCopyId")
+    @JoinColumn(name = "book_copy_id", nullable = false)
+    private BookCopy bookCopy;
 
     @Column(name = "read_date", nullable = false)
     private LocalDate readDate;

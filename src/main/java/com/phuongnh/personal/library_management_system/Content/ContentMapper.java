@@ -9,7 +9,8 @@ public class ContentMapper {
                 content.getContentType(),
                 content.getTitle(),
                 content.getContent(),
-                content.getImageUrl(),
+                content.getImgsrc(),
+                content.getShowOnHomePage(),
                 content.getDate()
         );
     }
@@ -19,7 +20,8 @@ public class ContentMapper {
         content.setContentType(contentDTO.getContentType());
         content.setTitle(contentDTO.getTitle());
         content.setContent(contentDTO.getContent());
-        content.setImageUrl(contentDTO.getImageUrl());
+        content.setImgsrc(contentDTO.getImgsrc());
+        content.setShowOnHomePage(contentDTO.getShowOnHomePage());
         content.setDate(contentDTO.getDate());
         return content;
     }

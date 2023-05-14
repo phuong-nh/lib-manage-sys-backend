@@ -1,4 +1,4 @@
-package com.phuongnh.personal.library_management_system.User;
+package com.phuongnh.personal.library_management_system.UserBookHistory;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

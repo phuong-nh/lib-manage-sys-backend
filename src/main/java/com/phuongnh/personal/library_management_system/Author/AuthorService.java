@@ -22,8 +22,8 @@ public class AuthorService {
         return new AuthorDTO(
                 author.getId(),
                 author.getGivenName(),
-                author.getSurname(),
-                author.isSurnameFirst(),
+                author.getSurName(),
+                author.getIsGivenSurname(),
                 author.getImgsrc(),
                 author.getAuthorBio()
         );
@@ -33,8 +33,8 @@ public class AuthorService {
         Author author = new Author();
         author.setId(authorDTO.getId());
         author.setGivenName(authorDTO.getGivenName());
-        author.setSurname(authorDTO.getSurname());
-        author.setSurnameFirst(authorDTO.getIsSurnameFirst());
+        author.setSurName(authorDTO.getSurName());
+        author.setIsGivenSurname(authorDTO.getIsGivenSurName());
         author.setImgsrc(authorDTO.getImgsrc());
         author.setAuthorBio(authorDTO.getAuthorBio());
         return author;
@@ -84,12 +84,12 @@ public class AuthorService {
             existingAuthor.setGivenName(authorDTO.getGivenName());
         }
 
-        if (authorDTO.getSurname() != null) {
-            existingAuthor.setSurname(authorDTO.getSurname());
+        if (authorDTO.getSurName() != null) {
+            existingAuthor.setSurName(authorDTO.getSurName());
         }
 
-        if (authorDTO.getIsSurnameFirst() != null) {
-            existingAuthor.setSurnameFirst(authorDTO.getIsSurnameFirst());
+        if (authorDTO.getIsGivenSurName() != null) {
+            existingAuthor.setIsGivenSurname(authorDTO.getIsGivenSurName());
         }
 
         if (authorDTO.getImgsrc() != null) {

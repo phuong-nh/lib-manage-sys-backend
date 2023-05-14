@@ -21,34 +21,32 @@ public class BookCopyService {
     private BookRepository bookRepository;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private BookCopyMapper bookCopyMapper;
 
     public List<BookCopyDTO> getAllBookCopies() {
         return bookCopyRepository.findAll().stream()
-                .map(bookCopyMapper::toDTO)
+                .map(BookCopyMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     public BookCopyDTO getBookCopyById(UUID id) {
         BookCopy bookCopy = bookCopyRepository.findById(id).orElseThrow(() -> new RuntimeException("Book copy not found"));
-        return bookCopyMapper.toDTO(bookCopy);
+        return BookCopyMapper.toDTO(bookCopy);
     }
 
     public BookCopyDTO createBookCopy(BookCopyDTO bookCopyDTO) {
         Book book = bookRepository.findById(bookCopyDTO.getBookId()).orElseThrow(() -> new RuntimeException("Book not found"));
         User borrower = bookCopyDTO.getBorrowerId() != null ? userRepository.findById(bookCopyDTO.getBorrowerId()).orElseThrow(() -> new RuntimeException("User not found")) : null;
-        BookCopy bookCopy = bookCopyMapper.toEntity(bookCopyDTO, book, borrower);
-        return bookCopyMapper.toDTO(bookCopyRepository.save(bookCopy));
+        BookCopy bookCopy = BookCopyMapper.toEntity(bookCopyDTO, book, borrower);
+        return BookCopyMapper.toDTO(bookCopyRepository.save(bookCopy));
     }
 
     public BookCopyDTO updateBookCopy(UUID id, BookCopyDTO bookCopyDTO) {
         BookCopy existingBookCopy = bookCopyRepository.findById(id).orElseThrow(() -> new RuntimeException("Book copy not found"));
         Book book = bookRepository.findById(bookCopyDTO.getBookId()).orElseThrow(() -> new RuntimeException("Book not found"));
         User borrower = bookCopyDTO.getBorrowerId() != null ? userRepository.findById(bookCopyDTO.getBorrowerId()).orElseThrow(() -> new RuntimeException("User not found")) : null;
-        BookCopy updatedBookCopy = bookCopyMapper.toEntity(bookCopyDTO, book, borrower);
+        BookCopy updatedBookCopy = BookCopyMapper.toEntity(bookCopyDTO, book, borrower);
         updatedBookCopy.setId(existingBookCopy.getId());
-        return bookCopyMapper.toDTO(bookCopyRepository.save(updatedBookCopy));
+        return BookCopyMapper.toDTO(bookCopyRepository.save(updatedBookCopy));
     }
 
     public void deleteBookCopy(UUID id) {
@@ -65,7 +63,7 @@ public class BookCopyService {
         bookCopy.setBorrower(borrower);
         bookCopy.setBorrowDate(LocalDate.now());
         bookCopy.setReturnDate(LocalDate.now().plusDays(30));
-        return bookCopyMapper.toDTO(bookCopyRepository.save(bookCopy));
+        return BookCopyMapper.toDTO(bookCopyRepository.save(bookCopy));
     }
 
     public BookCopyDTO returnBook(UUID id) {
@@ -77,7 +75,7 @@ public class BookCopyService {
         bookCopy.setBorrower(null);
         bookCopy.setBorrowDate(null);
         bookCopy.setReturnDate(null);
-        return bookCopyMapper.toDTO(bookCopyRepository.save(bookCopy));
+        return BookCopyMapper.toDTO(bookCopyRepository.save(bookCopy));
     }
 }
 

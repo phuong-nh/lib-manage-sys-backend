@@ -41,14 +41,14 @@ public class Content {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "imgsrc")
+    private String imgsrc;
 
     @Column(name = "date")
     private LocalDateTime date = LocalDateTime.now();
 
     @Column(name = "show_on_home_page")
-    private boolean showOnHomePage;
+    private Boolean showOnHomePage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
