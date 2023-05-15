@@ -7,7 +7,7 @@ import java.util.UUID;
 @Component
 public class UserMapper {
 
-    public UserDTO toDTO(User user) {
+    public static UserDTO toDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setGivenName(user.getGivenName());
@@ -20,7 +20,7 @@ public class UserMapper {
         return dto;
     }
 
-    public User toEntity(UserDTO dto) {
+    public static User toEntity(UserDTO dto) {
         User user = new User();
         user.setId(dto.getId());
         user.setGivenName(dto.getGivenName());

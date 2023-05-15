@@ -45,6 +45,9 @@ public class Author {
     @OneToOne(mappedBy = "authorBio", fetch = FetchType.LAZY)
     private Content authorBio;
 
+    @Column(name = "author_bio")
+    private UUID authorBioId;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_author",

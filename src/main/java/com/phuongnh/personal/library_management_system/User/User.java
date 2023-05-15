@@ -30,14 +30,17 @@ public class User {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private UserRole role;
+    private UserRole role = UserRole.USER;
 
     @Column(name = "imgsrc")
     private String imgsrc;
 
     @Column(name = "is_banned", nullable = false)
-    private Boolean isBanned;
+    private Boolean isBanned = false;
 }
 

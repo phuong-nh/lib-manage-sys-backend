@@ -16,28 +16,28 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable UUID id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    public ResponseEntity<UserDTO> getUserById(@PathVariable UUID id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.createUser(userDTO), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable UUID id, @RequestBody User user) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
+    public ResponseEntity<UserDTO> updateUser(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
+        return new ResponseEntity<>(userService.updateUser(id, userDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

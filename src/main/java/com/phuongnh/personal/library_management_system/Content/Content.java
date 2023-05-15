@@ -53,15 +53,5 @@ public class Content {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     private User author;
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_bio_id", referencedColumnName = "id")
-    private Author authorBio;
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_bio_id", referencedColumnName = "id")
-    private Book bookBio;
 }
 

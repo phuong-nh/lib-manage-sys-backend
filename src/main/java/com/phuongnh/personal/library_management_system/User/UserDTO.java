@@ -15,7 +15,7 @@ public class UserDTO {
     private String surName;
     private Boolean isGivenSurName;
     private String email;
-    private String role;
+    private String role = "USER";
     private String imgsrc;
-    private Boolean isBanned;
+    private Boolean isBanned = false;
 }

@@ -24,12 +24,15 @@ public class UserService {
     @Autowired
     private ReservationRepository reservationRepository;
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(UserMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public User getUserById(UUID id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+    public UserDTO getUserById(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return UserMapper.toDTO(user);
     }
 
     public List<BookCopyDTO> getLoanedBooks(UUID userId) {
@@ -46,38 +49,41 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = UserMapper.toEntity(userDTO);
+//        user.setRole(UserRole.USER);
+        User savedUser = userRepository.save(user);
+        return UserMapper.toDTO(savedUser);
     }
 
-    public User updateUser(UUID id, User user) {
-        User existingUser = getUserById(id);
-
-        if(user.getGivenName() != null) {
-            existingUser.setGivenName(user.getGivenName());
+    public UserDTO updateUser(UUID id, UserDTO userDTO) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        if(userDTO.getGivenName() != null) {
+            user.setGivenName(userDTO.getGivenName());
         }
-        if(user.getSurName() != null) {
-            existingUser.setSurName(user.getSurName());
+        if(userDTO.getSurName() != null) {
+            user.setSurName(userDTO.getSurName());
         }
-        if(user.getIsGivenSurname() != null) {
-            existingUser.setIsGivenSurname(user.getIsGivenSurname());
+        if(userDTO.getIsGivenSurName() != null) {
+            user.setIsGivenSurname(userDTO.getIsGivenSurName());
         }
-        if(user.getEmail() != null) {
-            existingUser.setEmail(user.getEmail());
+        if(userDTO.getEmail() != null) {
+            user.setEmail(userDTO.getEmail());
         }
-        if(user.getRole() != null) {
-            existingUser.setRole(user.getRole());
+        if(userDTO.getRole() != null) {
+            user.setRole(UserRole.valueOf(userDTO.getRole()));
         }
-        if(user.getImgsrc() != null) {
-            existingUser.setImgsrc(user.getImgsrc());
+        if(userDTO.getImgsrc() != null) {
+            user.setImgsrc(userDTO.getImgsrc());
         }
-        if(user.getIsBanned() != null) {
-            existingUser.setIsBanned(user.getIsBanned());
+        if(userDTO.getIsBanned() != null) {
+            user.setIsBanned(userDTO.getIsBanned());
         }
-        return userRepository.save(existingUser);
+        User updatedUser = userRepository.save(user);
+        return UserMapper.toDTO(updatedUser);
     }
 
     public void deleteUser(UUID id) {
-        userRepository.delete(getUserById(id));
+        userRepository.deleteById(id);
     }
 }
