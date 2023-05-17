@@ -21,10 +21,7 @@ import com.phuongnh.personal.library_management_system.Category.Category;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Table(name = "book")
 public class Book {
@@ -43,7 +40,9 @@ public class Book {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @OneToOne(mappedBy = "bookBio", fetch = FetchType.LAZY)
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_id")
     private Content bookBio;
 
     @Column(name = "publisher", nullable = false)
@@ -74,4 +73,3 @@ public class Book {
     @Column(name = "imgsrc")
     private String imgsrc;
 }
-

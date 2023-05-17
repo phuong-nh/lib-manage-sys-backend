@@ -1,11 +1,9 @@
 package com.phuongnh.personal.library_management_system.Author;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import com.phuongnh.personal.library_management_system.Book.Book;
 import com.phuongnh.personal.library_management_system.Content.Content;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,14 +12,14 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
+import com.phuongnh.personal.library_management_system.Book.Book;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Table(name = "author")
 public class Author {
 
@@ -42,11 +40,9 @@ public class Author {
     @Column(name = "imgsrc")
     private String imgsrc;
 
-    @OneToOne(mappedBy = "authorBio", fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "content_id")
     private Content authorBio;
-
-    @Column(name = "author_bio")
-    private UUID authorBioId;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

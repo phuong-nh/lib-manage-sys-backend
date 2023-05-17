@@ -83,7 +83,6 @@ public class BookService {
             defaultBookBio.setTitle("");
             defaultBookBio.setContent("");
             defaultBookBio.setContentType(ContentType.valueOf("BOOK_BIO"));
-            defaultBookBio.setBookBio(book);
             contentRepository.save(defaultBookBio);
             book.setBookBio(defaultBookBio);
         }

@@ -58,14 +58,12 @@ public class AuthorService {
             Content authorBio = authorDTO.getAuthorBio();
             authorBio.setContentType(ContentType.AUTHOR_BIO);
             author.setAuthorBio(contentRepository.save(authorBio));
-            author.setAuthorBioId(authorBio.getId());
         } else {
             Content defaultAuthorBio = new Content();
             defaultAuthorBio.setContentType(ContentType.AUTHOR_BIO);
             defaultAuthorBio.setTitle("Author Bio");
             defaultAuthorBio.setContent("This is the default author bio");
             author.setAuthorBio(contentRepository.save(defaultAuthorBio));
-            author.setAuthorBioId(defaultAuthorBio.getId());
         }
 
         Author savedAuthor = authorRepository.save(author);
