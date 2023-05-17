@@ -23,7 +23,7 @@ public class AuthorService {
                 author.getId(),
                 author.getGivenName(),
                 author.getSurName(),
-                author.getIsGivenSurname(),
+                author.getIsGivenSurName(),
                 author.getImgsrc(),
                 author.getAuthorBio()
         );
@@ -34,7 +34,7 @@ public class AuthorService {
         author.setId(authorDTO.getId());
         author.setGivenName(authorDTO.getGivenName());
         author.setSurName(authorDTO.getSurName());
-        author.setIsGivenSurname(authorDTO.getIsGivenSurName());
+        author.setIsGivenSurName(authorDTO.getIsGivenSurName());
         author.setImgsrc(authorDTO.getImgsrc());
         author.setAuthorBio(authorDTO.getAuthorBio());
         return author;
@@ -89,7 +89,7 @@ public class AuthorService {
         }
 
         if (authorDTO.getIsGivenSurName() != null) {
-            existingAuthor.setIsGivenSurname(authorDTO.getIsGivenSurName());
+            existingAuthor.setIsGivenSurName(authorDTO.getIsGivenSurName());
         }
 
         if (authorDTO.getImgsrc() != null) {

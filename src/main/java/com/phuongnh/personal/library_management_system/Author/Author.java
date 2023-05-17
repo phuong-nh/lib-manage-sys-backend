@@ -35,7 +35,7 @@ public class Author {
     private String surName;
 
     @Column(name = "is_given_surname", nullable = false)
-    private Boolean isGivenSurname;
+    private Boolean isGivenSurName;
 
     @Column(name = "imgsrc")
     private String imgsrc;

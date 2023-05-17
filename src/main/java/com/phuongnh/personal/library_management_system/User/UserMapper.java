@@ -12,7 +12,7 @@ public class UserMapper {
         dto.setId(user.getId());
         dto.setGivenName(user.getGivenName());
         dto.setSurName(user.getSurName());
-        dto.setIsGivenSurName(user.getIsGivenSurname());
+        dto.setIsGivenSurName(user.getIsGivenSurName());
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole().name());
         dto.setImgsrc(user.getImgsrc());
@@ -25,7 +25,7 @@ public class UserMapper {
         user.setId(dto.getId());
         user.setGivenName(dto.getGivenName());
         user.setSurName(dto.getSurName());
-        user.setIsGivenSurname(dto.getIsGivenSurName());
+        user.setIsGivenSurName(dto.getIsGivenSurName());
         user.setEmail(dto.getEmail());
         user.setRole(UserRole.valueOf(dto.getRole()));
         user.setImgsrc(dto.getImgsrc());

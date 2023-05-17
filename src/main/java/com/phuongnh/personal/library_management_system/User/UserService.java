@@ -65,7 +65,7 @@ public class UserService {
             user.setSurName(userDTO.getSurName());
         }
         if(userDTO.getIsGivenSurName() != null) {
-            user.setIsGivenSurname(userDTO.getIsGivenSurName());
+            user.setIsGivenSurName(userDTO.getIsGivenSurName());
         }
         if(userDTO.getEmail() != null) {
             user.setEmail(userDTO.getEmail());
