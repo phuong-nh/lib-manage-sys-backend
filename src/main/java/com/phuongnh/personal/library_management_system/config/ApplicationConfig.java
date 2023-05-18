@@ -1,6 +1,6 @@
 package com.phuongnh.personal.library_management_system.config;
 
-import com.phuongnh.personal.library_management_system.User.UserRepository;
+import com.phuongnh.personal.library_management_system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
