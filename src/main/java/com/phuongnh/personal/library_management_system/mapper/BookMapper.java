@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class BookMapper {
 
-    public BookDTO toDTO(Book book) {
+    public static BookDTO toDTO(Book book) {
         BookDTO dto = new BookDTO();
         dto.setId(book.getId());
         dto.setIsbn(book.getIsbn());
@@ -27,7 +27,7 @@ public class BookMapper {
         return dto;
     }
 
-    public Book toEntity(BookDTO dto) {
+    public static Book toEntity(BookDTO dto) {
         Book book = new Book();
         book.setIsbn(dto.getIsbn());
         book.setTitle(dto.getTitle());
@@ -37,27 +37,5 @@ public class BookMapper {
         book.setPublishedDate(dto.getPublishedDate());
         book.setImgsrc(dto.getImgsrc());
         return book;
-    }
-
-    public Book updateEntityFromDTO(BookDTO bookDTO, Book existingBook) {
-        if (bookDTO.getIsbn() != null) {
-            existingBook.setIsbn(bookDTO.getIsbn());
-        }
-        if (bookDTO.getTitle() != null) {
-            existingBook.setTitle(bookDTO.getTitle());
-        }
-        if (bookDTO.getDescription() != null) {
-            existingBook.setDescription(bookDTO.getDescription());
-        }
-        if (bookDTO.getPublisher() != null) {
-            existingBook.setPublisher(bookDTO.getPublisher());
-        }
-        if (bookDTO.getPublishedDate() != null) {
-            existingBook.setPublishedDate(bookDTO.getPublishedDate());
-        }
-        if (bookDTO.getImgsrc() != null) {
-            existingBook.setImgsrc(bookDTO.getImgsrc());
-        }
-        return existingBook;
     }
 }

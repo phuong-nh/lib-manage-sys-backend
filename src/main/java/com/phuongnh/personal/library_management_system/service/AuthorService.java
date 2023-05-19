@@ -1,6 +1,7 @@
 package com.phuongnh.personal.library_management_system.service;
 
 import com.phuongnh.personal.library_management_system.dto.AuthorDTO;
+import com.phuongnh.personal.library_management_system.mapper.AuthorMapper;
 import com.phuongnh.personal.library_management_system.model.Author;
 import com.phuongnh.personal.library_management_system.model.Content;
 import com.phuongnh.personal.library_management_system.repository.AuthorRepository;
@@ -21,41 +22,19 @@ public class AuthorService {
     @Autowired
     private ContentRepository contentRepository;
 
-    private AuthorDTO toAuthorDTO(Author author) {
-        return new AuthorDTO(
-                author.getId(),
-                author.getGivenName(),
-                author.getSurName(),
-                author.getIsGivenSurName(),
-                author.getImgsrc(),
-                author.getAuthorBio()
-        );
-    }
-
-    private Author toAuthor(AuthorDTO authorDTO) {
-        Author author = new Author();
-        author.setId(authorDTO.getId());
-        author.setGivenName(authorDTO.getGivenName());
-        author.setSurName(authorDTO.getSurName());
-        author.setIsGivenSurName(authorDTO.getIsGivenSurName());
-        author.setImgsrc(authorDTO.getImgsrc());
-        author.setAuthorBio(authorDTO.getAuthorBio());
-        return author;
-    }
-
     public List<AuthorDTO> getAllAuthors() {
         return authorRepository.findAll().stream()
-                .map(this::toAuthorDTO)
+                .map(AuthorMapper::toAuthorDTO)
                 .collect(Collectors.toList());
     }
 
     public AuthorDTO getAuthorById(UUID id) {
-        Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
-        return toAuthorDTO(author);
+        Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("AuthorNotFoundException"));
+        return AuthorMapper.toAuthorDTO(author);
     }
 
     public AuthorDTO createAuthor(AuthorDTO authorDTO) {
-        Author author = toAuthor(authorDTO);
+        Author author = AuthorMapper.toAuthor(authorDTO);
 
         if (authorDTO.getAuthorBio() != null) {
             Content authorBio = authorDTO.getAuthorBio();
@@ -70,11 +49,11 @@ public class AuthorService {
         }
 
         Author savedAuthor = authorRepository.save(author);
-        return toAuthorDTO(savedAuthor);
+        return AuthorMapper.toAuthorDTO(savedAuthor);
     }
 
     public AuthorDTO updateAuthor(UUID id, AuthorDTO authorDTO) {
-        Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+        Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("AuthorNotFoundException"));
 
         if (authorDTO.getAuthorBio() != null) {
             Content authorBio = existingAuthor.getAuthorBio();
@@ -83,28 +62,19 @@ public class AuthorService {
             contentRepository.save(authorBio);
         }
 
-        if (authorDTO.getGivenName() != null) {
-            existingAuthor.setGivenName(authorDTO.getGivenName());
-        }
+        existingAuthor.setGivenName(authorDTO.getGivenName() == null ? existingAuthor.getGivenName() : authorDTO.getGivenName());
+        existingAuthor.setSurName(authorDTO.getSurName() == null ? existingAuthor.getSurName() : authorDTO.getSurName());
+        existingAuthor.setIsGivenSurName(authorDTO.getIsGivenSurName() == null ? existingAuthor.getIsGivenSurName() : authorDTO.getIsGivenSurName());
+        existingAuthor.setImgsrc(authorDTO.getImgsrc() == null ? existingAuthor.getImgsrc() : authorDTO.getImgsrc());
+        existingAuthor.setAuthorBio(authorDTO.getAuthorBio() == null ? existingAuthor.getAuthorBio() : authorDTO.getAuthorBio());
 
-        if (authorDTO.getSurName() != null) {
-            existingAuthor.setSurName(authorDTO.getSurName());
-        }
-
-        if (authorDTO.getIsGivenSurName() != null) {
-            existingAuthor.setIsGivenSurName(authorDTO.getIsGivenSurName());
-        }
-
-        if (authorDTO.getImgsrc() != null) {
-            existingAuthor.setImgsrc(authorDTO.getImgsrc());
-        }
-
-        Author updatedAuthor = authorRepository.save(existingAuthor);
-        return toAuthorDTO(updatedAuthor);
+        Author savedAuthor = authorRepository.save(existingAuthor);
+        return AuthorMapper.toAuthorDTO(savedAuthor);
     }
 
-    public void deleteAuthor(UUID id) {
+    public AuthorDTO deleteAuthor(UUID id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
         authorRepository.delete(author);
+        return AuthorMapper.toAuthorDTO(author);
     }
 }

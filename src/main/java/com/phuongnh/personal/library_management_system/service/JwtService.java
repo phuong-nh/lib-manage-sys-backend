@@ -1,4 +1,4 @@
-package com.phuongnh.personal.library_management_system.config;
+package com.phuongnh.personal.library_management_system.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -6,7 +6,6 @@ import com.phuongnh.personal.library_management_system.model.RegisterRequest;
 import com.phuongnh.personal.library_management_system.model.User;
 import com.phuongnh.personal.library_management_system.repository.UserRepository;
 import com.phuongnh.personal.library_management_system.model.UserRole;
-import com.phuongnh.personal.library_management_system.config.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
