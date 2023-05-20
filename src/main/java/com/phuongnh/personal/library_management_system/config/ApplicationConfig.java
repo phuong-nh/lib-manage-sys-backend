@@ -1,5 +1,6 @@
 package com.phuongnh.personal.library_management_system.config;
 
+import com.fasterxml.jackson.datatype.hibernate6.Hibernate6Module;
 import com.phuongnh.personal.library_management_system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -40,5 +41,10 @@ public class ApplicationConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public Hibernate6Module hibernateModule() {
+        return new Hibernate6Module();
     }
 }

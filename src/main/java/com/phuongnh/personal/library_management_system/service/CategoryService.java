@@ -1,6 +1,8 @@
 package com.phuongnh.personal.library_management_system.service;
 
+import com.phuongnh.personal.library_management_system.dto.BookDTO;
 import com.phuongnh.personal.library_management_system.dto.CategoryDTO;
+import com.phuongnh.personal.library_management_system.mapper.BookMapper;
 import com.phuongnh.personal.library_management_system.model.Book;
 
 import com.phuongnh.personal.library_management_system.model.Category;
@@ -44,10 +46,10 @@ public class CategoryService {
         return new CategoryDTO(category.getId(), category.getName());
     }
 
-    public List<Book> getBooksByCategoryName(String categoryName) {
-        Category category = categoryRepository.findByName(categoryName)
+    public List<BookDTO> getBooksByCategoryId(UUID id) {
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
-        return category.getBooks();
+        return category.getBooks().stream().map(BookMapper::toDTO).toList();
     }
 
     public void deleteCategoryByName(String name) {

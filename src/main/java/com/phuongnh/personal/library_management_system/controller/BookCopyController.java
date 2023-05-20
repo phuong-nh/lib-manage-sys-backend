@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/copies")
+@RequestMapping("api/v1/copies")
 public class BookCopyController {
 
     @Autowired
