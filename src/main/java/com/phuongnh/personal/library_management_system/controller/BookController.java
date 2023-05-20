@@ -21,88 +21,40 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<List<BookDTO>> getAllBooks() {
-        try {
-            return ResponseEntity.ok(bookService.getAllBooks());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<BookDTO> getBookById(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(bookService.getBookById(id));
-        } catch (Exception e) {
-            if (e.getMessage().equals("BookNotFoundException")) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
+        return ResponseEntity.ok(bookService.getBookById(id));
     }
 
     @GetMapping("/{id}/copies-status")
     public ResponseEntity<List<BookCopyStatus>> getCopiesStatus(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(bookService.getCopiesStatus(id));
-        } catch (Exception e) {
-            if (e.getMessage().equals("BookNotFoundException")) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
+        return ResponseEntity.ok(bookService.getCopiesStatus(id));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERUSER')")
     public ResponseEntity<BookDTO> createBook(@RequestBody BookDTO bookDTO) {
-        try {
-            return new ResponseEntity<>(bookService.createBook(bookDTO), HttpStatus.CREATED);
-        } catch (Exception e) {
-            if (e.getMessage().equals("BookNotFoundException")) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).build();
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(bookService.createBook(bookDTO));
     }
 
     @PostMapping("/{id}/add-copies")
     @PreAuthorize("hasAnyAuthority('STAFF', 'ADMIN', 'SUPERUSER')")
     public ResponseEntity<BookDTO> addCopies(@PathVariable UUID id, @RequestParam("amount") int amount) {
-        try {
-            return ResponseEntity.ok(bookService.addCopies(id, amount));
-        } catch (Exception e) {
-            if (e.getMessage().equals("BookNotFoundException")) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.badRequest().build();
-            }
-        }
+        return ResponseEntity.ok(bookService.addCopies(id, amount));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERUSER')")
     public ResponseEntity<BookDTO> updateBook(@PathVariable UUID id, @RequestBody BookDTO bookDTO) {
-        try {
-            return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        return ResponseEntity.ok(bookService.updateBook(id, bookDTO));
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'SUPERUSER')")
     public ResponseEntity<BookDTO> deleteBook(@PathVariable UUID id) {
-        try {
-            return ResponseEntity.ok(bookService.deleteBook(id));
-        } catch (Exception e) {
-            if (e.getMessage().equals("BookNotFoundException")) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-        }
+        return ResponseEntity.ok(bookService.deleteBook(id));
     }
 }

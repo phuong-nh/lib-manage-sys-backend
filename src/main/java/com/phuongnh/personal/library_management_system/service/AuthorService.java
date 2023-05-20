@@ -1,6 +1,7 @@
 package com.phuongnh.personal.library_management_system.service;
 
 import com.phuongnh.personal.library_management_system.dto.AuthorDTO;
+import com.phuongnh.personal.library_management_system.exception.AuthorNotFoundException;
 import com.phuongnh.personal.library_management_system.mapper.AuthorMapper;
 import com.phuongnh.personal.library_management_system.model.Author;
 import com.phuongnh.personal.library_management_system.model.Content;
@@ -29,7 +30,7 @@ public class AuthorService {
     }
 
     public AuthorDTO getAuthorById(UUID id) {
-        Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("AuthorNotFoundException"));
+        Author author = authorRepository.findById(id).orElseThrow(() -> new AuthorNotFoundException(id.toString()));
         return AuthorMapper.toAuthorDTO(author);
     }
 
@@ -53,7 +54,7 @@ public class AuthorService {
     }
 
     public AuthorDTO updateAuthor(UUID id, AuthorDTO authorDTO) {
-        Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("AuthorNotFoundException"));
+        Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new AuthorNotFoundException(id.toString()));
 
         if (authorDTO.getAuthorBio() != null) {
             Content authorBio = existingAuthor.getAuthorBio();
@@ -73,7 +74,7 @@ public class AuthorService {
     }
 
     public AuthorDTO deleteAuthor(UUID id) {
-        Author author = authorRepository.findById(id).orElseThrow(() -> new RuntimeException("Author not found"));
+        Author author = authorRepository.findById(id).orElseThrow(() -> new AuthorNotFoundException(id.toString()));
         authorRepository.delete(author);
         return AuthorMapper.toAuthorDTO(author);
     }

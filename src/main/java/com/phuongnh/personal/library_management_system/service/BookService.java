@@ -1,5 +1,6 @@
 package com.phuongnh.personal.library_management_system.service;
 
+import com.phuongnh.personal.library_management_system.exception.*;
 import com.phuongnh.personal.library_management_system.mapper.BookMapper;
 import com.phuongnh.personal.library_management_system.dto.BookDTO;
 import com.phuongnh.personal.library_management_system.model.*;
@@ -36,12 +37,12 @@ public class BookService {
     }
 
     public BookDTO getBookById(UUID id) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("BookNotFoundException"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id.toString()));
         return BookMapper.toDTO(book);
     }
 
     public List<BookCopyStatus> getCopiesStatus(UUID bookId) {
-        Book book = bookRepository.findById(bookId).orElseThrow(() -> new RuntimeException("BookNotFoundException"));
+        Book book = bookRepository.findById(bookId).orElseThrow(() -> new BookNotFoundException(bookId.toString()));
         return book.getCopies().stream()
                 .map(BookCopy::getStatus)
                 .collect(Collectors.toList());
@@ -51,32 +52,32 @@ public class BookService {
         Book book = BookMapper.toEntity(bookDTO);
 
         if (book.getIsbn() == null || book.getIsbn().isEmpty()) {
-            throw new RuntimeException("IsbnNotProvidedException");
+            throw new IsbnNotProvidedException();
         } else {
             Book existingBook = bookRepository.findByIsbn(book.getIsbn()).orElse(null);
             if (existingBook != null) {
-                throw new RuntimeException("IsbnAlreadyExistsException");
+                throw new IsbnAlreadyExistsException();
             }
         }
 
         if (bookDTO.getAuthorIds() != null && !bookDTO.getAuthorIds().isEmpty()) {
             List<Author> authors = authorRepository.findAllById(bookDTO.getAuthorIds());
             if (authors.size() != bookDTO.getAuthorIds().size()) {
-                throw new RuntimeException("AuthorIdsInvalidOrNotFoundException");
+                throw new AuthorIdsInvalidOrNotFoundException();
             }
             book.setAuthors(authors);
         } else {
-            throw new RuntimeException("NoAuthorIdsProvidedException");
+            throw new NoAuthorIdsProvidedException();
         }
 
         if (bookDTO.getCategoryIds() != null && !bookDTO.getCategoryIds().isEmpty()) {
             List<Category> categories = categoryRepository.findAllById(bookDTO.getCategoryIds());
             if (categories.size() != bookDTO.getCategoryIds().size()) {
-                throw new RuntimeException("CategoryIdsInvalidOrNotFoundException");
+                throw new CategoryIdsInvalidOrNotFoundException();
             }
             book.setCategories(categories);
         } else {
-            throw new RuntimeException("NoCategoryIdsProvidedException");
+            throw new NoCategoryIdsProvidedException();
         }
 
         bookRepository.save(book);
@@ -108,7 +109,7 @@ public class BookService {
     }
 
     public BookDTO updateBook(UUID id, BookDTO bookDTO) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("BookNotFoundException"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id.toString()));
 
         book.setTitle(bookDTO.getTitle() != null ? bookDTO.getTitle() : book.getTitle());
         book.setIsbn(bookDTO.getIsbn() != null ? bookDTO.getIsbn() : book.getIsbn());
@@ -119,7 +120,7 @@ public class BookService {
         if (bookDTO.getAuthorIds() != null && !bookDTO.getAuthorIds().isEmpty()) {
             List<Author> authors = authorRepository.findAllById(bookDTO.getAuthorIds());
             if (authors.size() != bookDTO.getAuthorIds().size()) {
-                throw new RuntimeException("AuthorIdsInvalidOrNotFoundException");
+                throw new AuthorIdsInvalidOrNotFoundException();
             }
             book.setAuthors(authors);
         }
@@ -127,7 +128,7 @@ public class BookService {
         if (bookDTO.getCategoryIds() != null && !bookDTO.getCategoryIds().isEmpty()) {
             List<Category> categories = categoryRepository.findAllById(bookDTO.getCategoryIds());
             if (categories.size() != bookDTO.getCategoryIds().size()) {
-                throw new RuntimeException("CategoryIdsInvalidOrNotFoundException");
+                throw new CategoryIdsInvalidOrNotFoundException();
             }
             book.setCategories(categories);
         }
@@ -150,7 +151,7 @@ public class BookService {
 
                 int copiesToRemove = existingNumberOfCopies - newNumberOfCopies;
                 if (availableCopies.size() < copiesToRemove) {
-                    throw new RuntimeException("NotEnoughAvailableCopiesException");
+                    throw new NotEnoughAvailableCopiesException();
                 }
                 for (int i = 0; i < copiesToRemove; i++) {
                     bookCopyRepository.delete(availableCopies.get(i));
@@ -169,13 +170,13 @@ public class BookService {
     }
 
     public BookDTO deleteBook(UUID id) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("BookNotFoundException"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id.toString()));
         bookRepository.delete(book);
         return BookMapper.toDTO(book);
     }
 
     public BookDTO addCopies(UUID id, int amount) {
-        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("BookNotFoundException"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id.toString()));
         List<BookCopy> copies = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             BookCopy bookCopy = new BookCopy();

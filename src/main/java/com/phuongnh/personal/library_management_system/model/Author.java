@@ -37,7 +37,7 @@ public class Author {
     @Column(name = "imgsrc")
     private String imgsrc;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "content_id")
     private Content authorBio;
 

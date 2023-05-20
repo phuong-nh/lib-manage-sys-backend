@@ -36,7 +36,7 @@ public class Book {
     private String description;
 
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "content_id")
     private Content bookBio;
 
