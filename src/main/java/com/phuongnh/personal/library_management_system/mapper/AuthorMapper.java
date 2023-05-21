@@ -13,7 +13,7 @@ public class AuthorMapper {
                 author.getSurName(),
                 author.getIsGivenSurName(),
                 author.getImgsrc(),
-                author.getAuthorBio()
+                ContentMapper.toDTO(author.getAuthorBio())
         );
     }
 
@@ -24,7 +24,7 @@ public class AuthorMapper {
         author.setSurName(authorDTO.getSurName());
         author.setIsGivenSurName(authorDTO.getIsGivenSurName());
         author.setImgsrc(authorDTO.getImgsrc());
-        author.setAuthorBio(authorDTO.getAuthorBio());
+        author.setAuthorBio(ContentMapper.toEntity(authorDTO.getAuthorBio()));
         return author;
     }
 }

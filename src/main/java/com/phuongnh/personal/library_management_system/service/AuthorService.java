@@ -1,8 +1,10 @@
 package com.phuongnh.personal.library_management_system.service;
 
 import com.phuongnh.personal.library_management_system.dto.AuthorDTO;
+import com.phuongnh.personal.library_management_system.dto.ContentDTO;
 import com.phuongnh.personal.library_management_system.exception.AuthorNotFoundException;
 import com.phuongnh.personal.library_management_system.mapper.AuthorMapper;
+import com.phuongnh.personal.library_management_system.mapper.ContentMapper;
 import com.phuongnh.personal.library_management_system.model.Author;
 import com.phuongnh.personal.library_management_system.model.Content;
 import com.phuongnh.personal.library_management_system.repository.AuthorRepository;
@@ -22,6 +24,8 @@ public class AuthorService {
     private AuthorRepository authorRepository;
     @Autowired
     private ContentRepository contentRepository;
+    @Autowired
+    private ContentService contentService;
 
     public List<AuthorDTO> getAllAuthors() {
         return authorRepository.findAll().stream()
@@ -38,15 +42,15 @@ public class AuthorService {
         Author author = AuthorMapper.toAuthor(authorDTO);
 
         if (authorDTO.getAuthorBio() != null) {
-            Content authorBio = authorDTO.getAuthorBio();
+            ContentDTO authorBio = authorDTO.getAuthorBio();
             authorBio.setContentType(ContentType.AUTHOR_BIO);
-            author.setAuthorBio(contentRepository.save(authorBio));
+            author.setAuthorBio(contentService.createContent(authorBio));
         } else {
-            Content defaultAuthorBio = new Content();
+            ContentDTO defaultAuthorBio = new ContentDTO();
             defaultAuthorBio.setContentType(ContentType.AUTHOR_BIO);
             defaultAuthorBio.setTitle("Author Bio");
             defaultAuthorBio.setContent("This is the default author bio");
-            author.setAuthorBio(contentRepository.save(defaultAuthorBio));
+            author.setAuthorBio(contentService.createContent(defaultAuthorBio));
         }
 
         Author savedAuthor = authorRepository.save(author);
@@ -67,7 +71,10 @@ public class AuthorService {
         existingAuthor.setSurName(authorDTO.getSurName() == null ? existingAuthor.getSurName() : authorDTO.getSurName());
         existingAuthor.setIsGivenSurName(authorDTO.getIsGivenSurName() == null ? existingAuthor.getIsGivenSurName() : authorDTO.getIsGivenSurName());
         existingAuthor.setImgsrc(authorDTO.getImgsrc() == null ? existingAuthor.getImgsrc() : authorDTO.getImgsrc());
-        existingAuthor.setAuthorBio(authorDTO.getAuthorBio() == null ? existingAuthor.getAuthorBio() : authorDTO.getAuthorBio());
+
+        if (authorDTO.getAuthorBio() != null) {
+            contentService.updateContent(authorDTO.getId(), authorDTO.getAuthorBio());
+        }
 
         Author savedAuthor = authorRepository.save(existingAuthor);
         return AuthorMapper.toAuthorDTO(savedAuthor);

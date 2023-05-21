@@ -21,8 +21,6 @@ public class ContentController {
 
     @Autowired
     private ContentService contentService;
-    @Autowired
-    private ContentMapper contentMapper;
 
     @GetMapping
     public ResponseEntity<List<Content>> getAllContents() {
@@ -34,7 +32,7 @@ public class ContentController {
     public ResponseEntity<List<ContentDTO>> getContentsByType(@PathVariable ContentType contentType) {
         List<Content> contents = contentService.getAllContentsByType(contentType);
         List<ContentDTO> contentDTOs = contents.stream()
-                .map(contentMapper::toDTO)
+                .map(ContentMapper::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(contentDTOs, HttpStatus.OK);
     }
@@ -43,7 +41,7 @@ public class ContentController {
     public ResponseEntity<List<ContentDTO>> getHomePageContents() {
         List<Content> contents = contentService.getHomePageContents();
         List<ContentDTO> contentDTOs = contents.stream()
-                .map(contentMapper::toDTO)
+                .map(ContentMapper::toDTO)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(contentDTOs, HttpStatus.OK);
     }
@@ -51,7 +49,7 @@ public class ContentController {
     @GetMapping("/{contentId}")
     public ResponseEntity<ContentDTO> getContentById(@PathVariable UUID contentId) {
         Content content = contentService.getContentById(contentId);
-        ContentDTO contentDTO = contentMapper.toDTO(content);
+        ContentDTO contentDTO = ContentMapper.toDTO(content);
         return new ResponseEntity<>(contentDTO, HttpStatus.OK);
     }
 
@@ -59,14 +57,14 @@ public class ContentController {
     @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'SUPERUSER')")
     public ResponseEntity<ContentDTO> createContent(@RequestBody ContentDTO contentDTO) {
         Content createdContent = contentService.createContent(contentDTO);
-        return new ResponseEntity<>(contentMapper.toDTO(createdContent), HttpStatus.CREATED);
+        return new ResponseEntity<>(ContentMapper.toDTO(createdContent), HttpStatus.CREATED);
     }
 
     @PutMapping("/{contentId}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'STAFF', 'SUPERUSER')")
     public ResponseEntity<ContentDTO> updateContent(@PathVariable UUID contentId, @RequestBody ContentDTO contentDTO) {
         Content updatedContent = contentService.updateContent(contentId, contentDTO);
-        return new ResponseEntity<>(contentMapper.toDTO(updatedContent), HttpStatus.OK);
+        return new ResponseEntity<>(ContentMapper.toDTO(updatedContent), HttpStatus.OK);
     }
 
     @DeleteMapping("/{contentId}")

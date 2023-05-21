@@ -17,7 +17,7 @@ public class BookDTO {
     private String isbn;
     private String title;
     private String description;
-    private Content bookBio;
+    private ContentDTO bookBio;
     private String publisher;
     private List<UUID> authorIds;
     private List<UUID> categoryIds;

@@ -47,8 +47,15 @@ public class ContentService {
     public Content updateContent(UUID contentId, ContentDTO contentDTO) {
         Content existingContent = getContentById(contentId);
 
+        UUID authorId = ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+
         User author = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (author.getRole() != UserRole.ADMIN && author.getRole() != UserRole.SUPERUSER && author.getId() != existingContent.getAuthor().getId()) {
+        if (
+                author.getRole() != UserRole.ADMIN &&
+                author.getRole() != UserRole.SUPERUSER &&
+                author.getRole() != UserRole.STAFF &&
+                authorId != existingContent.getAuthor().getId()
+        ) {
             throw new RuntimeException("You are not authorized to update this content");
         }
 
@@ -58,6 +65,8 @@ public class ContentService {
         existingContent.setShowOnHomePage(contentDTO.getShowOnHomePage() != null ? contentDTO.getShowOnHomePage() : existingContent.getShowOnHomePage());
         existingContent.setImgsrc(contentDTO.getImgsrc() != null ? contentDTO.getImgsrc() : existingContent.getImgsrc());
         existingContent.setDate(LocalDateTime.now());
+        existingContent.setAuthor(userRepository.findById(authorId).orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + author.getId())));
+
         return contentRepository.save(existingContent);
     }
 

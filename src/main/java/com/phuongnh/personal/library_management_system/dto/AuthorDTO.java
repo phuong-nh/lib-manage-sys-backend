@@ -16,5 +16,5 @@ public class AuthorDTO {
     private String surName;
     private Boolean isGivenSurName;
     private String imgsrc;
-    private Content authorBio;
+    private ContentDTO authorBio;
 }

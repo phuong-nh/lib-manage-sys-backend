@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ContentMapper {
-    public ContentDTO toDTO(Content content) {
+    public static ContentDTO toDTO(Content content) {
         return new ContentDTO(
                 content.getContentType(),
                 content.getTitle(),
@@ -18,7 +18,7 @@ public class ContentMapper {
         );
     }
 
-    public Content toEntity(ContentDTO contentDTO) {
+    public static Content toEntity(ContentDTO contentDTO) {
         Content content = new Content();
         content.setContentType(contentDTO.getContentType());
         content.setTitle(contentDTO.getTitle());

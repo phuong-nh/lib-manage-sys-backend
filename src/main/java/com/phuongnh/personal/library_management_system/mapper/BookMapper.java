@@ -18,7 +18,7 @@ public class BookMapper {
         dto.setIsbn(book.getIsbn());
         dto.setTitle(book.getTitle());
         dto.setDescription(book.getDescription());
-        dto.setBookBio(book.getBookBio());
+        dto.setBookBio(ContentMapper.toDTO(book.getBookBio()));
         dto.setPublisher(book.getPublisher());
         dto.setAuthorIds(book.getAuthors().stream().map(Author::getId).collect(Collectors.toList()));
         dto.setCategoryIds(book.getCategories().stream().map(Category::getId).collect(Collectors.toList()));
@@ -34,7 +34,7 @@ public class BookMapper {
         book.setIsbn(dto.getIsbn());
         book.setTitle(dto.getTitle());
         book.setDescription(dto.getDescription());
-        book.setBookBio(dto.getBookBio());
+        book.setBookBio(ContentMapper.toEntity(dto.getBookBio()));
         book.setPublisher(dto.getPublisher());
         book.setPublishedDate(dto.getPublishedDate());
         book.setImgsrc(dto.getImgsrc());

@@ -1,5 +1,6 @@
 package com.phuongnh.personal.library_management_system.service;
 
+import com.phuongnh.personal.library_management_system.dto.ContentDTO;
 import com.phuongnh.personal.library_management_system.exception.*;
 import com.phuongnh.personal.library_management_system.mapper.BookMapper;
 import com.phuongnh.personal.library_management_system.dto.BookDTO;
@@ -29,6 +30,8 @@ public class BookService {
     private BookCopyRepository bookCopyRepository;
     @Autowired
     private ContentRepository contentRepository;
+    @Autowired
+    private ContentService contentService;
 
     public List<BookDTO> getAllBooks() {
         return bookRepository.findAll().stream()
@@ -82,13 +85,16 @@ public class BookService {
 
         bookRepository.save(book);
 
-        if (bookDTO.getBookBio() == null) {
-            Content defaultBookBio = new Content();
-            defaultBookBio.setTitle("");
-            defaultBookBio.setContent("");
-            defaultBookBio.setContentType(ContentType.valueOf("BOOK_BIO"));
-            contentRepository.save(defaultBookBio);
-            book.setBookBio(defaultBookBio);
+        if (bookDTO.getBookBio() != null) {
+            ContentDTO bookBio = bookDTO.getBookBio();
+            bookBio.setContentType(ContentType.BOOK_BIO);
+            book.setBookBio(contentService.createContent(bookBio));
+        } else {
+            ContentDTO defaultBookBio = new ContentDTO();
+            defaultBookBio.setContentType(ContentType.BOOK_BIO);
+            defaultBookBio.setTitle("Book bio");
+            defaultBookBio.setContent("This is the default book bio");
+            book.setBookBio(contentService.createContent(defaultBookBio));
         }
 
         bookRepository.save(book);
@@ -160,10 +166,7 @@ public class BookService {
         }
 
         if (bookDTO.getBookBio() != null && book.getBookBio() != null) {
-            Content bookBio = book.getBookBio();
-            bookBio.setTitle(bookDTO.getBookBio().getTitle());
-            bookBio.setContent(bookDTO.getBookBio().getContent());
-            contentRepository.save(bookBio);
+            contentService.updateContent(book.getBookBio().getId(), bookDTO.getBookBio());
         }
 
         return BookMapper.toDTO(bookRepository.save(book));
