@@ -13,7 +13,8 @@ public class ContentMapper {
                 content.getContent(),
                 content.getImgsrc(),
                 content.getShowOnHomePage(),
-                content.getDate()
+                content.getDate(),
+                content.getAuthor().getId()
         );
     }
 

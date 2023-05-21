@@ -12,11 +12,16 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("api/v1/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/basicinfo/{id}")
+    public ResponseEntity<UserDTO> getUserBasicInfoById(@PathVariable UUID id) {
+        return new ResponseEntity<>(userService.getUserBasicInfoById(id), HttpStatus.OK);
+    }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','STAFF','SUPERUSER')")

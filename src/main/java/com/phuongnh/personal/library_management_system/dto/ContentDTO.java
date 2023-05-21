@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -18,4 +19,5 @@ public class ContentDTO {
     private String imgsrc;
     private Boolean showOnHomePage;
     private LocalDateTime date;
+    private UUID authorId;
 }

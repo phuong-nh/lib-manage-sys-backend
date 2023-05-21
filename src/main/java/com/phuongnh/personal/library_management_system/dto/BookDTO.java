@@ -23,5 +23,6 @@ public class BookDTO {
     private List<UUID> categoryIds;
     private LocalDate publishedDate;
     private Integer numberOfCopies;
+    private List<UUID> bookCopyIds;
     private String imgsrc;
 }

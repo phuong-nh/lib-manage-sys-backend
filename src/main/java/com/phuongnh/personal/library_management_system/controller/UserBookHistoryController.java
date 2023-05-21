@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/userBookHistory")
+@RequestMapping("api/v1/userBookHistory")
 public class UserBookHistoryController {
     @Autowired
     private UserBookHistoryService userBookHistoryService;

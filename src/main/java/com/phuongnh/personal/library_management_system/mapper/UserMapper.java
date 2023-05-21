@@ -33,4 +33,15 @@ public class UserMapper {
         user.setIsBanned(dto.getIsBanned());
         return user;
     }
+
+    public static UserDTO toBasicInfoDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setGivenName(user.getGivenName());
+        dto.setSurName(user.getSurName());
+        dto.setIsGivenSurName(user.getIsGivenSurName());
+        dto.setImgsrc(user.getImgsrc());
+        dto.setRole(user.getRole().name());
+        return dto;
+    }
 }

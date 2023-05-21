@@ -3,6 +3,7 @@ package com.phuongnh.personal.library_management_system.mapper;
 import com.phuongnh.personal.library_management_system.dto.BookDTO;
 import com.phuongnh.personal.library_management_system.model.Author;
 import com.phuongnh.personal.library_management_system.model.Book;
+import com.phuongnh.personal.library_management_system.model.BookCopy;
 import com.phuongnh.personal.library_management_system.model.Category;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +22,7 @@ public class BookMapper {
         dto.setPublisher(book.getPublisher());
         dto.setAuthorIds(book.getAuthors().stream().map(Author::getId).collect(Collectors.toList()));
         dto.setCategoryIds(book.getCategories().stream().map(Category::getId).collect(Collectors.toList()));
+        dto.setBookCopyIds(book.getCopies().stream().map(BookCopy::getId).collect(Collectors.toList()));
         dto.setPublishedDate(book.getPublishedDate());
         dto.setNumberOfCopies(book.getCopies().size());
         dto.setImgsrc(book.getImgsrc());

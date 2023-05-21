@@ -91,4 +91,9 @@ public class UserService {
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
     }
+
+    public UserDTO getUserBasicInfoById(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return UserMapper.toBasicInfoDTO(user);
+    }
 }
