@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ContentDTO {
-
+    private UUID id;
     private ContentType contentType;
     private String title;
     private String content;

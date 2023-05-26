@@ -48,13 +48,13 @@ public class BookCopyController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{id}/borrow")
+    @PutMapping("/{id}/borrow")
     @PreAuthorize("hasAnyAuthority('USER','STAFF','ADMIN','SUPERUSER')")
     public ResponseEntity<BookCopyDTO> borrowBook(@PathVariable UUID id) {
         return ResponseEntity.ok(bookCopyService.borrowBook(id));
     }
 
-    @PostMapping("/{id}/return")
+    @PutMapping("/{id}/return")
     @PreAuthorize("hasAnyAuthority('USER','STAFF','ADMIN','SUPERUSER')")
     public ResponseEntity<BookCopyDTO> returnBook(@PathVariable UUID id) {
         return ResponseEntity.ok(bookCopyService.returnBook(id));

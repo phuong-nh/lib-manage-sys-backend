@@ -29,8 +29,6 @@ public class BookService {
     @Autowired
     private BookCopyRepository bookCopyRepository;
     @Autowired
-    private ContentRepository contentRepository;
-    @Autowired
     private ContentService contentService;
 
     public List<BookDTO> getAllBooks() {
@@ -82,8 +80,6 @@ public class BookService {
         } else {
             throw new NoCategoryIdsProvidedException();
         }
-
-        bookRepository.save(book);
 
         if (bookDTO.getBookBio() != null) {
             ContentDTO bookBio = bookDTO.getBookBio();

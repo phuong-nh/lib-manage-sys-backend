@@ -30,7 +30,7 @@ public class Content {
     @Column(name = "content_type", nullable = false)
     private ContentType contentType;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, columnDefinition = "TEXT")
     private String title;
 
     @Column(name = "content", nullable = false)

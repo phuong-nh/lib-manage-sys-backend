@@ -1,5 +1,6 @@
 package com.phuongnh.personal.library_management_system.controller;
 
+import com.phuongnh.personal.library_management_system.dto.BookCopyDTO;
 import com.phuongnh.personal.library_management_system.dto.UserDTO;
 import com.phuongnh.personal.library_management_system.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,18 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserBasicInfoById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/owninfo")
+    @PreAuthorize("hasAnyAuthority('ADMIN','STAFF','SUPERUSER','USER')")
+    public ResponseEntity<UserDTO> getUserOwnInfo() {
+        return new ResponseEntity<>(userService.getUserOwnInfo(), HttpStatus.OK);
+    }
+
+    @GetMapping("/ownloans")
+    @PreAuthorize("hasAnyAuthority('ADMIN','STAFF','SUPERUSER','USER')")
+    public ResponseEntity<List<BookCopyDTO>> getUserOwnLoans() {
+        return new ResponseEntity<>(userService.getUserOwnLoans(), HttpStatus.OK);
+    }
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN','STAFF','SUPERUSER')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -42,13 +55,13 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','SUPERUSER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','STAFF','SUPERUSER','USER')")
     public ResponseEntity<UserDTO> updateUser(@PathVariable UUID id, @RequestBody UserDTO userDTO) {
         return new ResponseEntity<>(userService.updateUser(id, userDTO), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','SUPERUSER')")
+    @PreAuthorize("hasAnyAuthority('ADMIN','STAFF','SUPERUSER','USER')")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.deleteUser(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

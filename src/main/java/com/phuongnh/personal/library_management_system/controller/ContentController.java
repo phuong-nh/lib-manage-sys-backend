@@ -23,8 +23,8 @@ public class ContentController {
     private ContentService contentService;
 
     @GetMapping
-    public ResponseEntity<List<Content>> getAllContents() {
-        List<Content> contents = contentService.getAllContents();
+    public ResponseEntity<List<ContentDTO>> getAllContents() {
+        List<ContentDTO> contents = contentService.getAllContents().stream().map(ContentMapper::toDTO).collect(Collectors.toList());
         return new ResponseEntity<>(contents, HttpStatus.OK);
     }
 

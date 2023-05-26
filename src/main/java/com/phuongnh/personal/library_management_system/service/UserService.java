@@ -6,6 +6,7 @@ import com.phuongnh.personal.library_management_system.model.User;
 import com.phuongnh.personal.library_management_system.model.UserRole;
 import com.phuongnh.personal.library_management_system.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.phuongnh.personal.library_management_system.dto.BookCopyDTO;
@@ -62,7 +63,14 @@ public class UserService {
     }
 
     public UserDTO updateUser(UUID id, UserDTO userDTO) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(!currentUser.getId().equals(id) && (currentUser.getRole() == UserRole.USER || currentUser.getRole() == UserRole.STAFF)) {
+            throw new RuntimeException("You are not allowed to update this user");
+        }
+
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+
         if(userDTO.getGivenName() != null) {
             user.setGivenName(userDTO.getGivenName());
         }
@@ -75,7 +83,7 @@ public class UserService {
         if(userDTO.getEmail() != null) {
             user.setEmail(userDTO.getEmail());
         }
-        if(userDTO.getRole() != null) {
+        if(userDTO.getRole() != null && (currentUser.getRole() == UserRole.ADMIN || currentUser.getRole() == UserRole.SUPERUSER)) {
             user.setRole(UserRole.valueOf(userDTO.getRole()));
         }
         if(userDTO.getImgsrc() != null) {
@@ -89,11 +97,29 @@ public class UserService {
     }
 
     public void deleteUser(UUID id) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if(!currentUser.getId().equals(id) && (currentUser.getRole() == UserRole.USER || currentUser.getRole() == UserRole.STAFF)) {
+            throw new RuntimeException("You are not allowed to delete this user");
+        }
+
         userRepository.deleteById(id);
     }
 
     public UserDTO getUserBasicInfoById(UUID id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return UserMapper.toBasicInfoDTO(user);
+    }
+
+    public UserDTO getUserOwnInfo() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return UserMapper.toDTO(currentUser);
+    }
+
+    public List<BookCopyDTO> getUserOwnLoans() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return bookCopyRepository.findAllByBorrower(currentUser).stream()
+                .map(BookCopyMapper::toDTO)
+                .collect(Collectors.toList());
     }
 }

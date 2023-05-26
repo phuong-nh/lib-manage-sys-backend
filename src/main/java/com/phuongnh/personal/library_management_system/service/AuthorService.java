@@ -23,8 +23,6 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
     @Autowired
-    private ContentRepository contentRepository;
-    @Autowired
     private ContentService contentService;
 
     public List<AuthorDTO> getAllAuthors() {
@@ -60,20 +58,13 @@ public class AuthorService {
     public AuthorDTO updateAuthor(UUID id, AuthorDTO authorDTO) {
         Author existingAuthor = authorRepository.findById(id).orElseThrow(() -> new AuthorNotFoundException(id.toString()));
 
-        if (authorDTO.getAuthorBio() != null) {
-            Content authorBio = existingAuthor.getAuthorBio();
-            authorBio.setTitle(authorDTO.getAuthorBio().getTitle());
-            authorBio.setContent(authorDTO.getAuthorBio().getContent());
-            contentRepository.save(authorBio);
-        }
-
         existingAuthor.setGivenName(authorDTO.getGivenName() == null ? existingAuthor.getGivenName() : authorDTO.getGivenName());
         existingAuthor.setSurName(authorDTO.getSurName() == null ? existingAuthor.getSurName() : authorDTO.getSurName());
         existingAuthor.setIsGivenSurName(authorDTO.getIsGivenSurName() == null ? existingAuthor.getIsGivenSurName() : authorDTO.getIsGivenSurName());
         existingAuthor.setImgsrc(authorDTO.getImgsrc() == null ? existingAuthor.getImgsrc() : authorDTO.getImgsrc());
 
         if (authorDTO.getAuthorBio() != null) {
-            contentService.updateContent(authorDTO.getId(), authorDTO.getAuthorBio());
+            contentService.updateContent(existingAuthor.getAuthorBio().getId(), authorDTO.getAuthorBio());
         }
 
         Author savedAuthor = authorRepository.save(existingAuthor);
