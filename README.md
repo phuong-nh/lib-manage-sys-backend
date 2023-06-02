@@ -1,53 +1,133 @@
-# Fullstack project
+# Library Management System - Backend
 
-Frontend and backend code:
+This is the backend API service for the Library Management System application. It's built using Spring Boot and provides endpoints for managing user authentication, categories, books, book copies, user book histories, and reservations.
 
-- You could either copy/paste the FE code to this repo OR just keep it in the fs14-frontend/fs14-backend repository
-  - If you choose to go with copy/pasting then have two folders one for client and the other for server
-  - If you choose to go with continue working in the individuals then open a PR that has the links to the other repository PRs
+## Database Design
 
-_I would highly recommend following these steps so you would have something to show and a working project._
+The system is designed around several key entities: User, Book, Category, Book Copy, Reservation, and UserBookHistory. The relationships among these entities are realized via a relational database. 
 
-You should start with the backend (the idea with this step is to get it up and running with basic endpoints):
+### User
 
-- Fix or improve the basic functionalities (Entities, Controllers, Service, etc)
-- Implement a very very very very very very basic auth. Username and password with token. (NO REFRESH TOKEN or FORGOT PASSWORD) - Optional, it's fine to omit at the beginning and implement it later.
+Users are the consumers of the system. Users can authenticate, register, borrow books, return books, and view their borrowing history. 
 
-Move to the frontend:
+### Book
 
-- You refactor the basic functionalities to be consumed from your backend
-  - Getting products/books
-  - Fetching one book/product
-  - Fetching users
-  - Creating book/product/category etc..
-  - Technically implement the basic endpoints your backend provides
+Books are the key items in the library. Each book has associated data such as title, author, and category. The system allows for the creation, retrieval, update, and deletion of books.
 
-**When finishing from the higher priorities you could start working on:**
+### Category
 
-- Broker auth with google or the basic auth if you didn't implement from the previous steps
-- Improve the permission matrix
-- Work on sorting, filtering, and pagination
-- Other cool stuff you wanna do.
+Categories allow books to be organized in a logical manner. Categories can also be created, retrieved, updated, and deleted. Furthermore, users can retrieve books belonging to a specific category.
 
-What is not basic feature:
+### Book Copy
 
-- Sorting and Filtering.
-- Pagination
-- Library -> Borrowing. E-commerce -> Managing orders
-- Having complex permission matrix, for instance: ADMIN can delete or add (Permissions)
-- Hosting images
+Since there can be multiple copies of a single book in the library, the system needs to track each individual copy. This also allows for managing the borrowing and returning of specific book copies.
 
-_You could deploy the backend before moving to the lower priority features._
+### Reservation
 
-Common mistakes:
+Reservations are a way for users to express their intention to borrow a specific book. The system supports the creation and deletion of reservations.
 
-- Finish all the backend and then move to frontend. (I'm not saying this bad )
-- Not having a plan
-- Having plan BUT you don't stick to it.
-  - You could have a ticket system (use Trello)
-- Spending too much time on a feature or styling and block all other tasks
-  - You could simply ask in the tech channel (what is the problem and what have you done to solve it)
-  - Simple, skip it.
-  - Do anything but blocking your time in solving a problem that doesn't really make any huge impact or not in your interest to learn or improve
-- Not being active or proactive when you have a common problem.
-- Ooh I have 3 week (1_814_000 seconds), plenty of time.
+### UserBookHistory
+
+UserBookHistory provides a historical record of all the books a user has borrowed. This can be used for analysis and reporting.
+
+## RESTful API Design
+
+The system is designed around REST principles:
+
+- Resource-based URLs: The API endpoints are based on resources (User, Book, Category, etc.).
+- Use of HTTP verbs: The system uses HTTP verbs (GET, POST, PUT, DELETE) to perform operations on the resources.
+- Stateless: Every request from the client to the server must contain all the information needed to understand and process the request. The server does not store any client context between requests.
+- Use of HTTP status codes: The API uses HTTP status codes to indicate the success or failure of a request.
+
+## Authentication and Authorization
+
+Security is crucial for a system like this. The system uses JWT (JSON Web Token) for authentication and authorization. 
+
+JWT is a compact, URL-safe means of representing claims to be transferred between two parties. The claims in a JWT are encoded as a JSON object that is used as the payload of a JSON Web Signature (JWS) structure or as the plaintext of a JSON Web Encryption (JWE) structure, enabling the claims to be digitally signed or integrity protected with a Message Authentication Code (MAC) and/or encrypted.
+
+The use of JWT ensures that the system is stateless and scalable because the server does not need to keep a record of tokens.
+
+## Future Improvements
+
+- Pagination and Sorting: Add support for pagination and sorting in the GET methods.
+- Rate Limiting: To protect the API from abuse, add rate limiting.
+- Real-time notifications: Implement real-time notifications for events like book returns and new reservations.
+- Improved error handling: Implement more comprehensive error handling to better manage and respond to exceptions.
+
+## API Endpoints
+
+Below are the provided API endpoints. 
+
+### Authentication
+- POST /api/v1/auth/authenticate
+- POST /api/v1/auth/register
+
+### Categories
+- GET /api/v1/categories
+- POST /api/v1/categories
+- GET /api/v1/categories/{id}
+- PUT /api/v1/categories/{id}
+- DELETE /api/v1/categories/{id}
+- GET /api/v1/categories/{id}/books
+
+### Book Copies
+- GET /api/v1/copies
+- POST /api/v1/copies
+- GET /api/v1/copies/{id}
+- PUT /api/v1/copies/{id}
+- DELETE /api/v1/copies/{id}
+- PUT /api/v1/copies/{id}/borrow
+- PUT /api/v1/copies/{id}/return
+
+### User Book History
+- GET /api/v1/userBookHistory
+- POST /api/v1/userBookHistory
+- GET /api/v1/userBookHistory/history/{userId}
+- PUT /api/v1/userBookHistory/{userId}/{bookId}
+- DELETE /api/v1/userBookHistory/{userId}/{bookId}
+
+### Reservations
+- GET /api/v1/reservations
+- POST /api/v1/reservations
+- GET /api/v1/reservations/{id}
+- DELETE /api/v1/reservations/{id}
+
+### Books
+- GET /api/v1/books
+- POST /api/v1/books
+- GET /api/v1/books/{id}
+- PUT /api/v1/books/{id}
+- DELETE /api/v1/books/{id}
+- POST /api/v1/books/{id}/add-copies
+
+## Installation & Setup
+
+Make sure you have the following installed:
+- Java (JDK 17)
+- Maven
+
+Clone this repository:
+
+```bash
+git clone https://github.com/phuong-nh/lib-manage-sys-backend.git
+cd lib-manage-sys-backend
+```
+
+Build the application:
+
+```bash
+mvn clean install
+```
+
+Run the application:
+
+```bash
+# with the following environment variables: SECRET_KEY, DATABASE_USERNAME, DATABASE_PASSWORD, DATABASE_URL
+mvn spring-boot:run
+```
+
+The application should now be running on http://localhost:8080.
+
+## Contributing
+
+This is a proof-of-concept project, but any contributions or suggestions are welcome.
